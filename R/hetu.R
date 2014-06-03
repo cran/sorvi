@@ -1,8 +1,30 @@
-#' Extract information from a Finnish personal identification number (HETU). 
+#' Validate a Finnish personal identification number (HETU). 
+#'
+#' @param hetu Finnish personal identification number as a string.
+#'
+#' @return Is the given string a valid Finnish personal identification number, TRUE or FALSE.
+#' 
+#' @author Jussi Paananen \email{louhos@@googlegroups.com}
+#' 
+#' @seealso \code{\link{hetu}} For extracting information from a Finnish personal identification number. 
+#' 
+#' @examples
+#' valid_hetu("010101-0101") # TRUE
+#' valid_hetu("010101-010A") # FALSE
+#' @export
+
+valid_hetu <- function(hetu) {
+  # Try to create hetu-object from the given hetu, check if created object is of class "hetu"
+  return(class(hetu(hetu)) == "hetu")
+}
+
+
+#' Extract information from a Finnish personal identification number
 #'
 #' @param hetu Finnish personal identification number as a string
 #'
-#' @return Finnish personal identification number object. Returns NA if the given string is not a valid Finnish personal identification number.
+#' @return Finnish personal identification number object. 
+#'         Returns NA if the given string is not a valid Finnish personal identification number.
 #' \item{hetu}{Finnish personal identification number as a string.}
 #' \item{gender}{Gender of the person. Male or Female.}
 #' \item{personal.number}{Personal number part of the identification number.}
@@ -15,7 +37,7 @@
 #' 
 #' @author Jussi Paananen \email{louhos@@googlegroups.com}
 #' 
-#' @seealso \code{\link{valid.hetu}} For validating Finnish personal identification number.
+#' @seealso \code{\link{valid_hetu}} For validating Finnish personal identification number.
 #' @examples
 #' hetu("111111-111C")
 #' hetu("111111-111C")$date
@@ -104,28 +126,7 @@ hetu <- function(hetu) {
   # Create hetu-object
   object <- list(hetu = hetu, gender=gender, personal.number=personal,  checksum=check, date=date, day=day, month=month, year=full.year, century.char=century)
   class(object) <- "hetu"
+
   return (object)
 }
-
-#' Validate a Finnish personal identification number (HETU). 
-#'
-#' @param hetu Finnish personal identification number as a string.
-#'
-#' @return Is the given string a valid Finnish personal identification number, TRUE or FALSE.
-#' 
-#' @author Jussi Paananen \email{louhos@@googlegroups.com}
-#' 
-#' @seealso \code{\link{hetu}} For extracting information from a Finnish personal identification number. 
-#' 
-#' @examples
-#' valid.hetu("010101-0101") # TRUE
-#' valid.hetu("010101-010A") # FALSE
-#' @export
-
-valid.hetu <- function(hetu) {
-  # Try to create hetu-object from the given hetu, check if created object is of class "hetu"
-  return(class(hetu(hetu)) == "hetu")
-}
-
-
 

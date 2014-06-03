@@ -1,15 +1,4 @@
-# This file is a part of the soRvi program (http://louhos.github.com/sorvi/)
-
-# Copyright (C) 2010-2013 Louhos <louhos.github.com>. All rights reserved.
-
-# This program is open source software; you can redistribute it and/or modify 
-# it under the terms of the FreeBSD License (keep this notice): 
-# http://en.wikipedia.org/wiki/BSD_licenses
-
-# This program is distributed in the hope that it will be useful, 
-# but WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
+# 'There is more to the truth than the facts'
 
 #' Get Finnish postal codes vs. municipalities table from Wikipedia. 
 #' @aliases get.postal.codes
@@ -18,20 +7,17 @@
 #'
 #' @return A data frame with following fields: postal.code: postal code; municipality: Name of the municipality (kunnan nimi); municipality.scandless: Municpality name without special chars 
 #' @export 
+#' @import plyr
 #' @references
 #' See citation("sorvi") 
 #' @author Juuso Parkkinen and Leo Lahti \email{louhos@@googlegroups.com}
-#' @note Previous version of this function was named: get.postal.codes	      
-#' @examples 
-#' #postal.code.table <- GetPostalCodeInfo() 
+#' @examples \dontrun{postal.code.table <- get_postal_code_info()}
 #' @keywords utilities
 
-GetPostalCodeInfo <- function (...) {
+get_postal_code_info <- function (...) {
 
   url <- "http://fi.wikipedia.org/wiki/Luettelo_Suomen_postinumeroista_kunnittain"
   message(paste("Downloading data from", url))
-
-  .InstallMarginal("plyr")
 
   # Read URL site
   txt <- readLines(url)
@@ -56,12 +42,17 @@ GetPostalCodeInfo <- function (...) {
     }
   }
 
-  map <- plyr::ldply(map)
+  map <- ldply(map)
   colnames(map) <- c("postal.code", "municipality")
-  map$municipality.ascii <- sorvi::korvaa.skandit(map$municipality)
+  map$municipality.ascii <- korvaa_skandit(map$municipality)
 
   # Remove the last row
   map <- map[-nrow(map),]
 
   map
 }
+
+
+
+
+

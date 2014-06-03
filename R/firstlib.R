@@ -1,16 +1,3 @@
-# This file is a part of the soRvi program (http://louhos.github.com/sorvi/)
-
-# Copyright (C) 2010-2013 Louhos <louhos.github.com>. All rights reserved.
-
-# This program is open source software; you can redistribute it and/or modify 
-# it under the terms of the FreeBSD License (keep this notice): 
-# http://en.wikipedia.org/wiki/BSD_licenses
-
-# This program is distributed in the hope that it will be useful, 
-# but WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-
 .onAttach <- function(lib, pkg)
 {
 
@@ -18,6 +5,17 @@
   # Sys.setlocale(locale = "UTF-8")
   # Sys.setlocale(locale = "WINDOWS-1252")
 
-  packageStartupMessage("sorvi - suomalainen avoimen datan tyokalupakki. Copyright (C) 2010-2013 Louhos. Tama on vapaa ohjelmisto, jota voi vapaasti kayttaa, muokata ja levittaa FreeBSD-lisenssilla.")
+  packageStartupMessage("sorvi - Tools for Finnish Open Data.\nCopyright (C) 2010-2014 Leo Lahti, Juuso Parkkinen, Juuso Haapanen, Einari Happonen, Jussi Paananen, Joona Lehtomaki ym.\n\nhttps://louhos.github.com/sorvi \n\n Hard sciences are successful because they deal with soft problems; \n soft sciences are struggling because they deal with hard problems.\n-                        Von Foerster\n")
 
 }
+
+
+
+#.onLoad <- function(lib, pkg)
+#{
+#  # This should enable vignette engine, see
+#  # Writing R Extensions document
+#  tools::vignetteEngine("knitr", weave = vweave, tangle = vtangle,
+#                      pattern = "[.]Rmd$", package = "knitr")
+#}		      
+		      

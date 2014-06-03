@@ -2,20 +2,7 @@
 # than asking him to perform a post-mortem examination: he may be able to
 # say what the experiment died of. ~ Sir Ronald Aylmer Fisher
 
-# This file is a part of the sorvi program (http://louhos.github.com/sorvi/)
-
-# Copyright (C) 2010-2013 Louhos <louhos.github.com>. All rights reserved.
-
-# This program is open source software; you can redistribute it and/or modify 
-# it under the terms of the FreeBSD License (keep this notice): 
-# http://en.wikipedia.org/wiki/BSD_licenses
-
-# This program is distributed in the hope that it will be useful, 
-# but WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-
-#' LouhosStoragePath
+#' ropengov_storage_path
 #'
 #' Arguments:
 #'   ... Arguments to pass
@@ -23,21 +10,25 @@
 #' Return:
 #' @return URL for Louhos data
 #'
-#' @examples # url <- LouhosStoragePath()
+#' @examples url <- ropengov_storage_path()
 #'
 #' @export
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
 #' @keywords utilities
-LouhosStoragePath <- function () {
+ropengov_storage_path <- function () {
   # Louhos data is stored in Github avoindata repo: 
   # https://github.com/avoindata/ which is 
   # mirrored on Datavaalit server
-  "http://www.datavaalit.fi/storage/avoindata/"
+  #"http://www.datavaalit.fi/storage/avoindata/"
+
+  # OKF Finland Server is now running daily cron jobs to
+  # update the avoindata Github repository
+  "http://data.okf.fi/ropengov/avoindata/"
 }
 
-#' LoadData
+#' load_sorvi_data
 #'
 #' Arguments:
 #' @param data.id data ID to download (suffix before .rda). Investigate the contents of the url path to check data.ids
@@ -46,7 +37,7 @@ LouhosStoragePath <- function () {
 #' Return:
 #' @return translations 
 #'
-#' @examples # translations <- LoadData("translations")
+#' @examples # translations <- load_sorvi_data("translations")
 #'
 #' @export
 #' @references
@@ -54,13 +45,13 @@ LouhosStoragePath <- function () {
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
 #' @keywords utilities
 
-LoadData <- function(data.id, verbose = TRUE) {
+load_sorvi_data <- function(data.id, verbose = TRUE) {
 
   # Circumvent warnings
   fi.en.maakunnat <- NULL
   kuntarajat.maa.shp <- NULL
 
-  url <- LouhosStoragePath()
+  url <- ropengov_storage_path()
   filepath <- paste(url, "/louhos/", data.id, ".rda", sep = "")
   if (verbose) {message(paste("Loading ", filepath, sep = ""))}
   #load(url(filepath), envir = .GlobalEnv)  
@@ -70,21 +61,6 @@ LoadData <- function(data.id, verbose = TRUE) {
   if (data.id == "kuntarajat.maa.shp") {return(kuntarajat.maa.shp)}
 
 }
-
-#' translations data documentation 
-#'
-#' This data set contains translations for common terms for which
-#' primary data is available in a non-Finnish language
-#' Contents: fi.en.maakunnat: Province names Finnish-English
-#'
-#' @name translations
-#' @docType data
-#' @author Leo Lahti \email{louhos@@googlegroups.com} 
-#' @references See cite(sorvi)
-#' @usage LoadData("translations")
-#' @format list
-#' @keywords data misc
-NULL
 
 
 #' Replace special characters with standard ones.
@@ -97,10 +73,10 @@ NULL
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
-#' @examples # korvaa.skandit("my.string.here") # if no, special chars, the same string is returned
+#' @examples korvaa_skandit("my.string.here") # if no, special chars, the same string is returned
 #' @keywords utilities
 
-korvaa.skandit <- function (s) {
+korvaa_skandit <- function (s) {
  
   sclass <- class(s)
 
@@ -132,9 +108,9 @@ korvaa.skandit <- function (s) {
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
-#' @examples # is.url("http://aa.px")
+#' @examples is_url("http://aa.px")
 #' @keywords utilities
-is.url <- function (s) {
+is_url <- function (s) {
   (class(s) == "character" && substr(s,1,7) == "http://")
 }
 
@@ -149,16 +125,16 @@ is.url <- function (s) {
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
-#' @examples # strstrip("a b") # returns "ab"
+#' @examples strstrip("a b") # returns "ab"
 #' @keywords utilities
 
 
 strstrip <- function (s) {
 
   if (length(s) == 1) {
-    stripped <- strstrip.single(s)
+    stripped <- strstrip_single(s)
   } else {
-    stripped <- sapply(s, strstrip.single)
+    stripped <- sapply(s, strstrip_single)
   }
 
   stripped
@@ -172,17 +148,13 @@ strstrip <- function (s) {
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
-#' @examples # strstrip.single("a b") # returns "ab"
-#' @keywords utilities
+#' @keywords internal
 
-strstrip.single <- function (s) {
+strstrip_single <- function (s) {
 
   # Remove spaces from a string
 
-  # (C) Leo Lahti 2008-2011
-  # FreeBSD license (keep this notice)
-
-  # Strip string i.e. remove spaces from the beginning and end
+  # strip string i.e. remove spaces from the beginning and end
   while (substr(s,1,1)==" ") {
     s <- substr(s,2,nchar(s))
   }
@@ -192,24 +164,23 @@ strstrip.single <- function (s) {
   s
 }
 
-#' Strip string i.e. remove spaces from the beginning and end
+#' strip string i.e. remove spaces from the beginning and end
 #' @param s string or character vector
 #'
-#' @return Stripped string
+#' @return stripped string
 #' @export 
 #' @references
 #' See citation("sorvi") 
 #' @author Leo Lahti \email{louhos@@googlegroups.com}
-#' @examples 
-#' #s2 <- Strip(s) 
+#' @examples strip(c("s ", " a")) 
 #' @keywords utilities
-Strip <- function (s) {
+strip <- function (s) {
 
   ss <- c()
   for (i in 1:length(s)) {
     si <- s[[i]]
 
-    # Strip string i.e. remove spaces from the beginning and end
+    # strip string i.e. remove spaces from the beginning and end
     while (substr(si,1,1)==" ") {
       si <- substr(si, 2, nchar(si))
     }
@@ -220,93 +191,4 @@ Strip <- function (s) {
   }
   ss
 }
-
-
-#' Install marginal dependencies on-demand from other functions.
-#' 
-#' Function is always supposed to be called from a parent function and if the
-#' marginal depedency package is not installed, the function will report the 
-#' name of the parent function requiring the package. Note that the whole call
-#' stack is not reported, only the immediate parent.
-#'
-#' @param package String name for the name to be installed
-#' @param ... further arguments passed on to install.packages
-#'
-#' @return Invisible NULL
-#' 
-#' @note meant for package internal use only
-#' @export
-#' @author Joona Lehtomaki \email{louhos@@googlegroups.com}
-#' @keywords utilities
-
-.InstallMarginal <- function(package, ...) {
-  if (suppressWarnings(!require(package, character.only=TRUE, quietly=TRUE))) { 
-    parent.function <- sys.calls()[[1]][1]
-    message(paste("Function ", parent.function, " requires package: ", package,
-                  ". Package not found, installing...", sep=""))
-    install.packages(package, ...) # Install the packages
-    require(package, character.only=TRUE) # Remember to load the library after installation
-  }
-}
-
-
-#' ReadASC: read ASC file
-#' Routines for 3D landscape visualization
-#' contributed by Janne Aukia 2013
-#'
-#' Arguments:
-#'   @param filename Input file name
-#'
-#' Returns:
-#'   @return data matrix
-#'
-#' @export
-#' @references
-#' See citation("sorvi") 
-#' @author Janne Aukia. Contact: \email{louhos@@googlegroups.com}
-#' @seealso ReadXYZ
-#' @examples # 
-#' @keywords utilities
-
-ReadASC <- function (filename) {
-
-  dat   <- read.table(filename, sep = " ", skip = 6)
-  mdat  <- data.matrix(dat)
-  tmdat <- t(mdat)[,nrow(mdat):1]
-  return(tmdat)
-
-}
-
-
-#' ReadXYZ: read XYZ coordinate file
-#' Routines for 3D landscape visualization
-#' contributed by Janne Aukia 2013
-#'
-#' Arguments:
-#'   @param filename Input file name
-#'
-#' Returns:
-#'   @return data matrix
-#'
-#' @export
-#' @references
-#' See citation("sorvi") 
-#' @author Janne Aukia. Contact: \email{louhos@@googlegroups.com}
-#' @seealso ReadASC
-#' @examples # 
-#' @keywords utilities
-
-ReadXYZ <- function(filename) {
-
-  .InstallMarginal("Matrix")
-
-  dat <- read.table(filename)
-  xp <- (dat$V1-min(dat$V1))/10
-  yp <- (dat$V2-min(dat$V2))/10
-
-  mat <- data.matrix(spMatrix(max(xp)+1,max(yp)+1,xp+1,yp+1,dat$V3))  
-  return(mat)
-
-}
-
 
