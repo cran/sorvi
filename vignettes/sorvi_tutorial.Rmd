@@ -18,16 +18,9 @@ Finnish open government data toolkit for R
 ===========
 
 This R package provides miscellaneous tools for Finnish open
-government data to complement other
-[rOpenGov](http://ropengov.github.io/projects) packages with a more
-specific scope. We also maintain a [todo list of further data
-sources](https://github.com/rOpenGov/sorvi/blob/master/vignettes/todo-datasets.md)
-to be added; your
-[contributions](http://louhos.github.com/contact.html) and [bug
-reports and other feedback](https://github.com/ropengov/sorvi) are
-welcome! For further information, see the [home
-page](http://louhos.github.com/sorvi).
-
+government data. Your
+[contributions](http://ropengov.github.io/contribute/), [bug reports
+and other feedback](https://github.com/ropengov/sorvi) are welcome!
 
 
 ## Available data sources and tools
@@ -48,11 +41,19 @@ page](http://louhos.github.com/sorvi).
 * [Municipality-Postal code conversions](#postalcodes) (Kunnat vs. postinumerot)  
 * [Municipality name-ID conversions](#municipalityconversions) (Kunnat vs. kuntakoodit)
 * [Municipality-province conversions](#municipality2province) (Kunnat vs. maakunnat)
+* [Generic synonyme converter](#synonymes) (Synonyymit)
 
 [Finnish personal identification number (HETU)](#hetu) (Henkilotunnuksen kasittely)  
 
-[Visualization tools](#visualization) (Visualisointirutiineja)
+[Visualization tools](#visualization) (Visualisointirutiineja)  
 
+See also [other rOpenGov packages](http://ropengov.github.io/projects), in particular:
+
+ * [gisfin](https://github.com/rOpenGov/gisfin/) Visualization of Finnish geographic information 
+ * [helsinki](https://github.com/rOpenGov/helsinki/) Helsinki open data tools 
+ * [sotkanet](https://github.com/rOpenGov/sotkanet/) THL Sotkanet database on health and demography
+ * [pxweb](https://github.com/rOpenGov/pxweb/) PX-Web interface to access data fom Statistics Finland and other PX-Web compliant sources
+ * [finpar](https://github.com/rOpenGov/finpar/) Finnish parliament data
 
 
 ## <a name="installation"></a>Installation
@@ -95,23 +96,14 @@ and in our [Rmarkdown blog](http://louhos.github.io/archive.html).
 ## <a name="provinces"></a>Province information (Maakunnat)
 
 
-### <a name="provinceinfo"></a>Basic data
-
-Source: [Wikipedia](http://fi.wikipedia.org/wiki/V%C3%A4est%C3%B6tiheys)
-
-```{r municipality, warning=FALSE, message=FALSE, eval=TRUE}
-tab <- get_province_info_wikipedia()
-head(tab)
-```
-
 ### <a name="provincetranslations"></a>Finnish-English translations
 
 **Finnish-English translations for province names** (we have not been able
 to solve all encoding problems yet; solutions welcome!):
 
-```{r translate, message=FALSE, eval=TRUE}
+```{r translate, message=FALSE, eval=FALSE}
 translations <- load_sorvi_data("translations")
-head(as.matrix(translations))
+kable(as.matrix(translations))
 ```
 
 
@@ -129,77 +121,107 @@ municipality names.
 
 Source: [Maanmittauslaitos, MML](http://www.maanmittauslaitos.fi/aineistot-palvelut/latauspalvelut/avoimien-aineistojen-tiedostopalvelu). 
 
-```{r municipalityMML, message=FALSE, warning=FALSE, eval=TRUE}
+```{r municipalityMML, message=FALSE, warning=FALSE, eval=FALSE}
 municipality.info.mml <- get_municipality_info_mml()
-print(municipality.info.mml[1:2,])
+library(knitr)
+kable(municipality.info.mml[1:2,])
 ```
 
 
 ## <a name="conversions"></a>Conversions
-
-### <a name="postalcodes"></a>Postal codes vs. municipalities
-
-Source: [Wikipedia](http://fi.wikipedia.org/wiki/Luettelo_Suomen_postinumeroista_kunnittain). The municipality names are provided also in plain ascii without special characters:
-
-```{r postalcodes, message=FALSE, warning=FALSE, eval=TRUE}
-postal.code.table <- get_postal_code_info() 
-head(postal.code.table)
-```
 
 
 ### <a name="municipality2province"></a>Municipality-Province mapping
 
 **Map all municipalities to correponding provinces**
 
-```{r province2, message=FALSE, warning=FALSE, echo=TRUE, eval=TRUE}
+```{r province2, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
 m2p <- municipality_to_province() 
-head(m2p) # Just show the first ones
+kable(head(m2p)) # Just show the first ones
 ```  
 
 **Map selected municipalities to correponding provinces:**
 
-```{r province6, message=FALSE, warning=FALSE, echo=TRUE, eval=TRUE}
+```{r province6, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
 municipality_to_province(c("Helsinki", "Tampere", "Turku")) 
 ```  
 
 **Speed up conversion with predefined info table:**
 
-```{r province7, message=FALSE, warning=FALSE, echo=TRUE, eval=TRUE}
+```{r province7, message=FALSE, warning=FALSE, echo=TRUE, eval=FALSE}
 m2p <- municipality_to_province(c("Helsinki", "Tampere", "Turku"), municipality.info.mml)
-head(m2p)
+kable(head(m2p))
 ```  
+
 
 
 ### <a name="municipalityconversions"></a>Municipality name-ID conversion
 
 **Municipality name to code**
 
-```{r province3, message=FALSE, echo=TRUE, eval=TRUE}
+```{r province3, message=FALSE, echo=TRUE, eval=FALSE}
 convert_municipality_codes(municipalities = c("Turku", "Tampere"))
 ```  
 
 **Municipality codes to names**
 
-```{r province4, message=FALSE, echo=TRUE, eval=TRUE}
+```{r province4, message=FALSE, echo=TRUE, eval=FALSE}
 convert_municipality_codes(ids = c(853, 837))
 ```  
 
 **Complete conversion table**
 
-```{r province5, message=FALSE, echo=TRUE, eval=TRUE}
+```{r province5, message=FALSE, echo=TRUE, eval=FALSE}
 municipality_ids <- convert_municipality_codes()
-head(municipality_ids) # just show the first entries
+kable(head(municipality_ids)) # just show the first entries
 ```
 
+
+### <a name="synonymes"></a>Synonyme conversions
+
+Generic conversion of synonymes into harmonized terms.
+
+First, get a synonyme-name mapping table. In this example we harmonize Finnish municipality names that have multiple versions. But the synonyme list can be arbitrary.
+
+```{r sorvi-synonymes-1, message=FALSE}
+f <- system.file("extdata/municipality_synonymes.csv", package = "sorvi")
+synonymes <- read.csv(f, sep = "\t")		 
+```
+
+Validate the synonyme list and add lowercase versions of the terms:
+
+```{r sorvi-synonymes-2, message=FALSE, eval=FALSE}
+synonymes <- check_synonymes(synonymes, include.lowercase = TRUE)
+```
+
+Convert the given terms from synonymes to the harmonized names:
+
+```{r sorvi-synonymes-3, message=FALSE, eval=FALSE}
+harmonized <- harmonize_names(c("Mantta", "Koski.Tl"), synonymes)
+kable(harmonized)
+```
 
 
 ## <a name="hetu"></a>Personal identification number (HETU)
 
-**Extract information from a Finnish personal identification number:**
+**Extracting information from a Finnish personal identification number**
 
 ```{r hetu, message=FALSE}
 library(sorvi)
 hetu("111111-111C")
+```
+
+The function accepts also vectors as input, returning a data frame:
+
+```{r hetuvec, message=FALSE}
+library(knitr)
+kable(hetu(c("010101-0101", "111111-111C")))
+```
+
+**Extracting specific field**
+
+```{r hetuextract, message=FALSE}
+hetu(c("010101-0101", "111111-111C"), extract = "gender")
 ```
 
 **Validate Finnish personal identification number:**
@@ -212,20 +234,20 @@ valid_hetu("010101-0101") # TRUE/FALSE
 
 ## <a name="visualization"></a>Visualization tools
 
-Line fit with confidence smoothers (if any of the required libraries
-are missing, install them with the install.packages command in R):
+Draw regression curve with smoothed error bars based on
+the [Visually-Weighted Regression](http://www.fight-entropy.com/2012/07/visually-weighted-regression.html) by Solomon M. Hsiang. The sorvi implementation extends [Felix Schonbrodt's original code](http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/).
 
 ```{r regressionline, message=FALSE, eval=TRUE, fig.width=10, fig.height=5}
 library(sorvi) 
-library(plyr)
-library(RColorBrewer)
-library(ggplot2)
 data(iris)
 p <- regression_plot(Sepal.Length ~ Sepal.Width, iris) 
 print(p)
 ```
 
+### TODO
 
+[TODO list of further data
+sources](https://github.com/rOpenGov/sorvi/blob/master/vignettes/todo-datasets.md)
 
 
 ## Licensing and Citations

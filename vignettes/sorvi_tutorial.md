@@ -1,7 +1,7 @@
 ---
 title: "sorvi tutorial"
 author: rOpenGov core team
-date: "2015-02-12"
+date: "2015-06-25"
 output:
   html_document:
     theme: flatly
@@ -18,16 +18,9 @@ Finnish open government data toolkit for R
 ===========
 
 This R package provides miscellaneous tools for Finnish open
-government data to complement other
-[rOpenGov](http://ropengov.github.io/projects) packages with a more
-specific scope. We also maintain a [todo list of further data
-sources](https://github.com/rOpenGov/sorvi/blob/master/vignettes/todo-datasets.md)
-to be added; your
-[contributions](http://louhos.github.com/contact.html) and [bug
-reports and other feedback](https://github.com/ropengov/sorvi) are
-welcome! For further information, see the [home
-page](http://louhos.github.com/sorvi).
-
+government data. Your
+[contributions](http://ropengov.github.io/contribute/), [bug reports
+and other feedback](https://github.com/ropengov/sorvi) are welcome!
 
 
 ## Available data sources and tools
@@ -48,11 +41,19 @@ page](http://louhos.github.com/sorvi).
 * [Municipality-Postal code conversions](#postalcodes) (Kunnat vs. postinumerot)  
 * [Municipality name-ID conversions](#municipalityconversions) (Kunnat vs. kuntakoodit)
 * [Municipality-province conversions](#municipality2province) (Kunnat vs. maakunnat)
+* [Generic synonyme converter](#synonymes) (Synonyymit)
 
 [Finnish personal identification number (HETU)](#hetu) (Henkilotunnuksen kasittely)  
 
-[Visualization tools](#visualization) (Visualisointirutiineja)
+[Visualization tools](#visualization) (Visualisointirutiineja)  
 
+See also [other rOpenGov packages](http://ropengov.github.io/projects), in particular:
+
+ * [gisfin](https://github.com/rOpenGov/gisfin/) Visualization of Finnish geographic information 
+ * [helsinki](https://github.com/rOpenGov/helsinki/) Helsinki open data tools 
+ * [sotkanet](https://github.com/rOpenGov/sotkanet/) THL Sotkanet database on health and demography
+ * [pxweb](https://github.com/rOpenGov/pxweb/) PX-Web interface to access data fom Statistics Finland and other PX-Web compliant sources
+ * [finpar](https://github.com/rOpenGov/finpar/) Finnish parliament data
 
 
 ## <a name="installation"></a>Installation
@@ -99,26 +100,6 @@ and in our [Rmarkdown blog](http://louhos.github.io/archive.html).
 ## <a name="provinces"></a>Province information (Maakunnat)
 
 
-### <a name="provinceinfo"></a>Basic data
-
-Source: [Wikipedia](http://fi.wikipedia.org/wiki/V%C3%A4est%C3%B6tiheys)
-
-
-```r
-tab <- get_province_info_wikipedia()
-head(tab)
-```
-
-```
-##          Province PopulationDensity
-## 1         Uusimaa             170.4
-## 2 Varsinais-Suomi              42.9
-## 3       Satakunta              28.8
-## 4      Kanta-Häme              32.7
-## 5       Pirkanmaa              37.9
-## 6     Päijät-Häme              38.9
-```
-
 ### <a name="provincetranslations"></a>Finnish-English translations
 
 **Finnish-English translations for province names** (we have not been able
@@ -127,17 +108,18 @@ to solve all encoding problems yet; solutions welcome!):
 
 ```r
 translations <- load_sorvi_data("translations")
+```
+
+```
+## Error: the input does not start with a magic number compatible with loading from a connection
+```
+
+```r
 head(as.matrix(translations))
 ```
 
 ```
-##                       [,1]              
-## Ã\u0085land Islands   "Ahvenanmaa"      
-## South Karelia         "EtelÃĪ-Karjala"  
-## Southern Ostrobothnia "EtelÃĪ-Pohjanmaa"
-## Southern Savonia      "EtelÃĪ-Savo"     
-## Kainuu                "Kainuu"          
-## Tavastia Proper       "Kanta-HÃĪme"
+## Error in as.matrix(translations): object 'translations' not found
 ```
 
 
@@ -158,52 +140,23 @@ Source: [Maanmittauslaitos, MML](http://www.maanmittauslaitos.fi/aineistot-palve
 
 ```r
 municipality.info.mml <- get_municipality_info_mml()
-print(municipality.info.mml[1:2,])
 ```
 
 ```
-##           Kohderyhma Kohdeluokk AVI Maakunta Kunta
-## Äänekoski         71      84200   4       13   992
-## Ähtäri            71      84200   4       14   989
-##                                             AVI_ni1
-## Äänekoski Länsi- ja Sisä-Suomen aluehallintovirasto
-## Ähtäri    Länsi- ja Sisä-Suomen aluehallintovirasto
-##                                                      AVI_ni2
-## Äänekoski Regionförvaltningsverket i Västra och Inre Finland
-## Ähtäri    Regionförvaltningsverket i Västra och Inre Finland
-##                 Maaku_ni1         Maaku_ni2 Kunta_ni1 Kunta_ni2 Kieli_ni1
-## Äänekoski     Keski-Suomi Mellersta Finland Äänekoski       N_A     Suomi
-## Ähtäri    Etelä-Pohjanmaa Södra Österbotten    Ähtäri    Etseri     Suomi
-##           Kieli_ni2                                    AVI.FI Kieli.FI
-## Äänekoski       N_A Länsi- ja Sisä-Suomen aluehallintovirasto    Suomi
-## Ähtäri       Ruotsi Länsi- ja Sisä-Suomen aluehallintovirasto    Suomi
-##                Maakunta.FI  Kunta.FI
-## Äänekoski      Keski-Suomi Äänekoski
-## Ähtäri    EtelÃ¤-Pohjanmaa    Ähtäri
+## Error: the input does not start with a magic number compatible with loading from a connection
+```
+
+```r
+library(knitr)
+kable(municipality.info.mml[1:2,])
+```
+
+```
+## Error in is.data.frame(x): object 'municipality.info.mml' not found
 ```
 
 
 ## <a name="conversions"></a>Conversions
-
-### <a name="postalcodes"></a>Postal codes vs. municipalities
-
-Source: [Wikipedia](http://fi.wikipedia.org/wiki/Luettelo_Suomen_postinumeroista_kunnittain). The municipality names are provided also in plain ascii without special characters:
-
-
-```r
-postal.code.table <- get_postal_code_info() 
-head(postal.code.table)
-```
-
-```
-##   postal.code municipality municipality.ascii
-## 1       07230       Askola             Askola
-## 2       07500       Askola             Askola
-## 3       07510       Askola             Askola
-## 4       07530       Askola             Askola
-## 5       07580       Askola             Askola
-## 6       07590       Askola             Askola
-```
 
 
 ### <a name="municipality2province"></a>Municipality-Province mapping
@@ -213,14 +166,18 @@ head(postal.code.table)
 
 ```r
 m2p <- municipality_to_province() 
-head(m2p) # Just show the first ones
 ```
 
 ```
-##           Äänekoski              Ähtäri                Akaa 
-##       "Keski-Suomi"  "EtelÃ¤-Pohjanmaa"         "Pirkanmaa" 
-##            Alajärvi           Alavieska              Alavus 
-##  "EtelÃ¤-Pohjanmaa" "Pohjois-Pohjanmaa"  "EtelÃ¤-Pohjanmaa"
+## Error: the input does not start with a magic number compatible with loading from a connection
+```
+
+```r
+kable(head(m2p)) # Just show the first ones
+```
+
+```
+## Error in head(m2p): object 'm2p' not found
 ```
 
 **Map selected municipalities to correponding provinces:**
@@ -231,8 +188,7 @@ municipality_to_province(c("Helsinki", "Tampere", "Turku"))
 ```
 
 ```
-##          Helsinki           Tampere             Turku 
-##         "Uusimaa"       "Pirkanmaa" "Varsinais-Suomi"
+## Error: the input does not start with a magic number compatible with loading from a connection
 ```
 
 **Speed up conversion with predefined info table:**
@@ -240,13 +196,20 @@ municipality_to_province(c("Helsinki", "Tampere", "Turku"))
 
 ```r
 m2p <- municipality_to_province(c("Helsinki", "Tampere", "Turku"), municipality.info.mml)
-head(m2p)
 ```
 
 ```
-##          Helsinki           Tampere             Turku 
-##         "Uusimaa"       "Pirkanmaa" "Varsinais-Suomi"
+## Error in municipality_to_province(c("Helsinki", "Tampere", "Turku"), municipality.info.mml): object 'municipality.info.mml' not found
 ```
+
+```r
+kable(head(m2p))
+```
+
+```
+## Error in head(m2p): object 'm2p' not found
+```
+
 
 
 ### <a name="municipalityconversions"></a>Municipality name-ID conversion
@@ -258,11 +221,6 @@ head(m2p)
 convert_municipality_codes(municipalities = c("Turku", "Tampere"))
 ```
 
-```
-##   Turku Tampere 
-##   "853"   "837"
-```
-
 **Municipality codes to names**
 
 
@@ -270,34 +228,46 @@ convert_municipality_codes(municipalities = c("Turku", "Tampere"))
 convert_municipality_codes(ids = c(853, 837))
 ```
 
-```
-##       853       837 
-##   "Turku" "Tampere"
-```
-
 **Complete conversion table**
 
 
 ```r
 municipality_ids <- convert_municipality_codes()
-head(municipality_ids) # just show the first entries
+kable(head(municipality_ids)) # just show the first entries
 ```
 
-```
-##            id      name
-## Äänekoski 992 Äänekoski
-## Ähtäri    989    Ähtäri
-## Akaa      020      Akaa
-## Alajärvi  005  Alajärvi
-## Alavieska 009 Alavieska
-## Alavus    010    Alavus
+
+### <a name="synonymes"></a>Synonyme conversions
+
+Generic conversion of synonymes into harmonized terms.
+
+First, get a synonyme-name mapping table. In this example we harmonize Finnish municipality names that have multiple versions. But the synonyme list can be arbitrary.
+
+
+```r
+f <- system.file("extdata/municipality_synonymes.csv", package = "sorvi")
+synonymes <- read.csv(f, sep = "\t")		 
 ```
 
+Validate the synonyme list and add lowercase versions of the terms:
+
+
+```r
+synonymes <- check_synonymes(synonymes, include.lowercase = TRUE)
+```
+
+Convert the given terms from synonymes to the harmonized names:
+
+
+```r
+harmonized <- harmonize_names(c("Mantta", "Koski.Tl"), synonymes)
+kable(harmonized)
+```
 
 
 ## <a name="hetu"></a>Personal identification number (HETU)
 
-**Extract information from a Finnish personal identification number:**
+**Extracting information from a Finnish personal identification number**
 
 
 ```r
@@ -306,35 +276,36 @@ hetu("111111-111C")
 ```
 
 ```
-## $hetu
-## [1] "111111-111C"
-## 
-## $gender
-## [1] "Male"
-## 
-## $personal.number
-## [1] 111
-## 
-## $checksum
-## [1] "C"
-## 
-## $date
-## [1] "1911-11-11"
-## 
-## $day
-## [1] 11
-## 
-## $month
-## [1] 11
-## 
-## $year
-## [1] 1911
-## 
-## $century.char
-## [1] "-"
-## 
-## attr(,"class")
-## [1] "hetu"
+##          hetu gender personal.number checksum       date day month year
+## 1 111111-111C   Male             111        C 1911-11-11  11    11 1911
+##   century.char
+## 1            -
+```
+
+The function accepts also vectors as input, returning a data frame:
+
+
+```r
+library(knitr)
+kable(hetu(c("010101-0101", "111111-111C")))
+```
+
+
+
+|hetu        |gender | personal.number|checksum |date       | day| month| year|century.char |
+|:-----------|:------|---------------:|:--------|:----------|---:|-----:|----:|:------------|
+|010101-0101 |Female |              10|1        |1901-01-01 |   1|     1| 1901|-            |
+|111111-111C |Male   |             111|C        |1911-11-11 |  11|    11| 1911|-            |
+
+**Extracting specific field**
+
+
+```r
+hetu(c("010101-0101", "111111-111C"), extract = "gender")
+```
+
+```
+## [1] "Female" "Male"
 ```
 
 **Validate Finnish personal identification number:**
@@ -352,15 +323,12 @@ valid_hetu("010101-0101") # TRUE/FALSE
 
 ## <a name="visualization"></a>Visualization tools
 
-Line fit with confidence smoothers (if any of the required libraries
-are missing, install them with the install.packages command in R):
+Draw regression curve with smoothed error bars based on
+the [Visually-Weighted Regression](http://www.fight-entropy.com/2012/07/visually-weighted-regression.html) by Solomon M. Hsiang. The sorvi implementation extends [Felix Schonbrodt's original code](http://www.nicebread.de/visually-weighted-watercolor-plots-new-variants-please-vote/).
 
 
 ```r
 library(sorvi) 
-library(plyr)
-library(RColorBrewer)
-library(ggplot2)
 data(iris)
 p <- regression_plot(Sepal.Length ~ Sepal.Width, iris) 
 print(p)
@@ -368,7 +336,10 @@ print(p)
 
 ![plot of chunk regressionline](figure/regressionline-1.png) 
 
+### TODO
 
+[TODO list of further data
+sources](https://github.com/rOpenGov/sorvi/blob/master/vignettes/todo-datasets.md)
 
 
 ## Licensing and Citations
@@ -386,8 +357,8 @@ citation("sorvi")
 ## Kindly cite the sorvi R package as follows:
 ## 
 ##   (C) Leo Lahti, Juuso Parkkinen, Joona Lehtomaki, Juuso Haapanen,
-##   Einari Happonen and Jussi Paananen (rOpenGov 2011-2014).  sorvi:
-##   Finnish open government data toolkit for R.  URL:
+##   Einari Happonen and Jussi Paananen (rOpenGov 2010-2015).  sorvi:
+##   Finnish open data toolkit for R.  URL:
 ##   http://ropengov.github.com/sorvi
 ## 
 ## A BibTeX entry for LaTeX users is
@@ -399,8 +370,7 @@ citation("sorvi")
 ##     year = {2011},
 ##   }
 ## 
-## Many thanks for all contributors! See:
-## http://louhos.github.com/contact.html
+## Many thanks for all contributors! See: http://ropengov.github.com
 ```
 
 ## Session info
@@ -413,8 +383,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.1.2 (2014-10-31)
-## Platform: x86_64-pc-linux-gnu (64-bit)
+## R version 3.2.1 (2015-06-18)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
+## Running under: Ubuntu 15.04
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -428,14 +399,19 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_1.0.0      RColorBrewer_1.1-2 plyr_1.8.1        
-## [4] sorvi_0.7.15       reshape_0.8.5      knitr_1.9         
+## [1] sorvi_0.7.26       knitr_1.10.5       scimapClient_0.2.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] colorspace_1.2-4 digest_0.6.8     evaluate_0.5.5   formatR_1.0     
-##  [5] grid_3.1.2       gtable_0.1.2     labeling_0.3     MASS_7.3-37     
-##  [9] munsell_0.4.2    proto_0.3-10     Rcpp_0.11.4      reshape2_1.4.1  
-## [13] scales_0.2.4     stringr_0.6.2    tools_3.1.2      XML_3.98-1.1
+##  [1] Rcpp_0.11.6        magrittr_1.5       MASS_7.3-41       
+##  [4] munsell_0.4.2      colorspace_1.2-6   R6_2.0.1          
+##  [7] highr_0.5          stringr_1.0.0      plyr_1.8.3        
+## [10] dplyr_0.4.2        tools_3.2.1        parallel_3.2.1    
+## [13] grid_3.2.1         gtable_0.1.2       DBI_0.3.1         
+## [16] lazyeval_0.1.10    assertthat_0.1     digest_0.6.8      
+## [19] RJSONIO_1.3-0      RColorBrewer_1.1-2 reshape2_1.4.1    
+## [22] ggplot2_1.0.1      formatR_1.2        evaluate_0.7      
+## [25] labeling_0.3       stringi_0.5-2      scales_0.2.5      
+## [28] proto_0.3-10
 ```
 
 
