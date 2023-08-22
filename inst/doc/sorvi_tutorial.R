@@ -23,6 +23,11 @@ library(sorvi)
 #  plot <- cran_downloads(pkgs = packages, sum = "total", output = "plot", use.cache = FALSE)
 #  plot
 
+## ----example_map--------------------------------------------------------------
+library(ggplot2)
+map1931 <- get_municipalities(year = 1931)
+ggplot(map1931) + geom_sf()
+
 ## ----citation, message=FALSE, eval=TRUE---------------------------------------
 citation("sorvi")
 

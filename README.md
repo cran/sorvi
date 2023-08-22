@@ -1,11 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![rOG-badge](https://ropengov.github.io/rogtemplate/reference/figures/ropengov-badge.svg)](https://ropengov.org/)
 [![R-CMD-check](https://github.com/rOpenGov/sorvi/workflows/R-CMD-check/badge.svg)](https://github.com/rOpenGov/sorvi/actions)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/sorvi)](https://cran.r-project.org/package=sorvi)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/sorvi)](https://cran.r-project.org/package=sorvi)
 [![r-universe](https://ropengov.r-universe.dev/badges/sorvi)](https://ropengov.r-universe.dev/)
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](https://github.com/badges/stability-badges)
 
@@ -37,8 +36,8 @@ You can install the development version of sorvi from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("rOpenGov/sorvi")
+# install.packages("remotes")
+remotes::install_github("rOpenGov/sorvi")
 ```
 
 Development version can be also installed using the
@@ -74,11 +73,11 @@ df
 #> # Groups:   year [5]
 #>    year package      n
 #>   <dbl> <fct>    <int>
-#> 1  2017 eurostat 12482
-#> 2  2018 eurostat 18932
-#> 3  2019 eurostat 28454
-#> 4  2020 eurostat 31298
-#> 5  2021 eurostat 30307
+#> 1  2018 eurostat 18932
+#> 2  2019 eurostat 28454
+#> 3  2020 eurostat 31298
+#> 4  2021 eurostat 30307
+#> 5  2022 eurostat 27656
 ```
 
 Get download statistics of various rOpenGov packages over time and draw
@@ -92,29 +91,30 @@ plot
 
 <img src="man/figures/README-example_visualize-1.png" width="80%" />
 
-For more (partly outdated) examples, check the [tutorial
-page](https://ropengov.github.io/sorvi/articles/sorvi_tutorial.html).
+For more examples, check the [package
+vignette](https://ropengov.github.io/sorvi/articles/sorvi_tutorial.html).
 
 ## Contributing
 
-  - [Submit suggestions and bug
-    reports](https://github.com/ropengov/sorvi/issues) (provide the
-    output of `sessionInfo()` and `packageVersion("sorvi")` and
-    preferably provide a [reproducible
-    example](http://adv-r.had.co.nz/Reproducibility.html))
-  - [Send a pull request](https://github.com/ropengov/sorvi/)
-  - [Star us on the Github page](https://github.com/ropengov/sorvi/)
-  - [See our website](https://ropengov.org/community/) for additional
-    contact information
+- [Submit suggestions and bug
+  reports](https://github.com/ropengov/sorvi/issues) (provide the output
+  of `sessionInfo()` and `packageVersion("sorvi")` and preferably
+  provide a [reproducible
+  example](http://adv-r.had.co.nz/Reproducibility.html))
+- [Send a pull request](https://github.com/ropengov/sorvi/)
+- [Star us on the Github page](https://github.com/ropengov/sorvi/)
+- [See our website](https://ropengov.org/community/) for additional
+  contact information
 
 ## Acknowledgements
 
-**Kindly cite this work** as follows: [Leo
-Lahti](https://github.com/antagomir/), Juuso Parkkinen, Joona Lehtomäki,
-Jussi Paananen, Einari Happonen, Juuso Haapanen, Pyry Kantanen. sorvi -
-Finnish Open Government Data Toolkit. URL:
-<http://ropengov.github.io/sorvi/>
+**Kindly cite this work** as follows:
 
-We are grateful to all
-[contributors](https://github.com/rOpenGov/sorvi/graphs/contributors)\!
+[Leo Lahti](https://github.com/antagomir/), Juuso Parkkinen, Joona
+Lehtomaki and Pyry Kantanen (2023). sorvi: Finnish open data toolkit for
+R. R package version 0.8.21. URL: <https://github.com/rOpenGov/sorvi>
+
+We are grateful to Jussi Paananen, Einari Happonen, Juuso Haapanen, and
+all other
+[contributors](https://github.com/rOpenGov/sorvi/graphs/contributors)!
 This project is part of [rOpenGov](https://ropengov.org).

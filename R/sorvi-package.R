@@ -3,15 +3,6 @@
 #' Additionally it has some functions that do not (yet) have their own package
 #' but are useful in some contexts.
 #'
-#' \tabular{ll}{
-#' Package: \tab sorvi\cr
-#' Type: \tab Package\cr
-#' Version: \tab 0.8.18\cr
-#' Date: \tab 2010-2022\cr
-#' License: \tab BSD 2-clause\cr
-#' LazyLoad: \tab yes\cr
-#' }
-#'
 #' @name sorvi-package
 #' @aliases sorvi
 #' @docType package
